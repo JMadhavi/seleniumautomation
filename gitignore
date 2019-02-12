@@ -1,0 +1,7 @@
+./gradle/
+build/
+seleniumautomation.iml
+seleniumautomation.ipr
+seleniumautomation.iws
+seleniumautomation_main.iml
+seleniumautomation_test.iml
