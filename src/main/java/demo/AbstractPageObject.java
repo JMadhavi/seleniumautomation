@@ -3,49 +3,45 @@ package demo;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractPageObject {
 
     protected WebDriver driver;
-    protected WebDriverWait wait;
+
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     public AbstractPageObject(WebDriver driver) {
         this.driver = driver;
-        this.wait = (new WebDriverWait(driver, 30));
+        PageFactory.initElements(driver, this);
         isLoaded();
     }
 
-    // Each page object must implement this method to return the identifier of a unique WebElement on that page.
-    // The presence of this unique element will be used to assert that the expected page has finished loading
-    protected abstract By getUniqueElement();
+    protected abstract WebElement getUniqueElement();
 
     protected void isLoaded() throws Error {
-        //Define a list of WebElements that match the unique element locator for the page
-        List<WebElement> uniqueElement = driver.findElements(getUniqueElement());
+        WebDriverWait wait = new WebDriverWait(driver, 30);
+        wait.until(ExpectedConditions.visibilityOf(getUniqueElement()));
+        wait.until(ExpectedConditions.elementToBeClickable(getUniqueElement()));
 
-        // Assert that the unique element is present in the DOM
-        Assert.assertTrue((uniqueElement.size() > 0),
-                "Unique Element \'" + getUniqueElement().toString() + "\' not found for " + this.getClass().getSimpleName());
-
-        // Wait until the unique element is visible in the browser and ready to use. This helps make sure the page is
-        // loaded before the next step of the tests continue.
-        wait.until(ExpectedConditions.visibilityOfElementLocated(getUniqueElement()));
     }
-
 
     public void waitForElementVisibleAndEnabled(By by){
         WebDriverWait wait = new WebDriverWait(driver,60);
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
         wait.until(ExpectedConditions.elementToBeClickable(by));
+    }
+
+    public void waitForElementVisibleAndEnabled(WebElement element){
+        WebDriverWait wait = new WebDriverWait(driver,60);
+        wait.until(ExpectedConditions.visibilityOf(element));
+        wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
     public void pause(Integer milliseconds){

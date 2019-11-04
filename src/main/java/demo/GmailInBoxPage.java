@@ -1,11 +1,10 @@
 package demo;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
-import java.util.List;
+
 
 public class GmailInBoxPage extends AbstractPageObject {
 
@@ -14,51 +13,38 @@ public class GmailInBoxPage extends AbstractPageObject {
     }
 
     @Override
-    protected By getUniqueElement() {
-        return By.xpath("//span[text()='Next']");
+    protected WebElement getUniqueElement() {
+        return nextButtonLocator;
     }
 
 
-    By LogoLocator = By.xpath("//a[contains(@href,'https://accounts.google.com/SignOutOptions') ]");
+    @FindBy(xpath="//a[contains(@href,'https://accounts.google.com/SignOutOptions') ]")
+    WebElement LogoLocator;
 
+    @FindBy(xpath="//input[@name='q']")
+    WebElement searchInputLocator;
 
-    By searchInputLocator = By.xpath("//input[@name='q']");
+    @FindBy(id="gb_71")
+    WebElement SignoutButtonLocator;
 
-    //By LogoLocator = By.xpath("//a[contains(@href,'https://accounts.google.com/SignOutOptions') ]");
-
-    By SignoutButtonLocator= By.id("gb_71");
+    @FindBy(xpath="//span[text()='Next']")
+    WebElement nextButtonLocator;
 
 
     public Boolean isLogoDisplayed() {
         logger.info("Check if logo is present.");
-        List<WebElement> DeviceRow = driver.findElements(LogoLocator);
-        return DeviceRow.size() > 0;
-    }
-
-
-    public void searchText(String SearchText) {
-        logger.info("search email by entering text.");
-        waitForElementVisibleAndEnabled(searchInputLocator);
-        driver.findElement(searchInputLocator).sendKeys(SearchText);
-    }
-
-
-    public void clickEnterKey() {
-        logger.info("Click Enter key.");
-        waitForElementVisibleAndEnabled(searchInputLocator);
-        driver.findElement(searchInputLocator).sendKeys(Keys.RETURN);
-
+        return LogoLocator.isDisplayed();
     }
 
 
     public void clickLogo() {
         logger.info("click logo.");
         waitForElementVisibleAndEnabled(LogoLocator);
-        driver.findElement(LogoLocator).click();
+        LogoLocator.click();
     }
     public void clickSignOut(){
         logger.info("click Sign out button.");
         waitForElementVisibleAndEnabled(SignoutButtonLocator);
-        driver.findElement(SignoutButtonLocator).click();
+        SignoutButtonLocator.click();
     }
 }

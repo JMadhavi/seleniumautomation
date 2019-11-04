@@ -1,7 +1,8 @@
 package demo;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public class GmailSignInPage extends AbstractPageObject {
 
@@ -10,37 +11,41 @@ public class GmailSignInPage extends AbstractPageObject {
     }
 
     @Override
-    protected By getUniqueElement() {
-        return By.xpath("//span[text()='Next']");
+    protected WebElement getUniqueElement() {
+        return nextButtonLocator;
     }
 
-    By LoginInputLocator = By.id("identifierId");
 
-    By NextButtonLocator = By.xpath("//span[text()='Next']");
+    @FindBy(id="identifierId")
+    WebElement LoginInputLocator ;
 
-    By PasswordInputLocator = By.name("password");
+    @FindBy( xpath="//span[text()='Next']")
+    WebElement NextButtonLocator;
 
+    @FindBy(name= "password")
+    WebElement PasswordInputLocator;
+
+    @FindBy(xpath="//span[text()='Next']")
+    WebElement nextButtonLocator;
 
 
     public void setLogin(String setLoginText) {
         logger.info("Set user name value.");
         waitForElementVisibleAndEnabled(LoginInputLocator);
-        driver.findElement(LoginInputLocator).sendKeys(setLoginText);
+        LoginInputLocator.sendKeys(setLoginText);
+
     }
-
-
     public void clickNextButton() {
         logger.info("Click Next button.");
         waitForElementVisibleAndEnabled(NextButtonLocator);
-        driver.findElement(NextButtonLocator).click();
-
+        NextButtonLocator.click();
     }
-
     public void setPassword(String setPasswordText) {
         logger.info("Set password.");
         waitForElementVisibleAndEnabled(PasswordInputLocator);
-        driver.findElement(PasswordInputLocator).sendKeys(setPasswordText);
+        PasswordInputLocator.sendKeys(setPasswordText);
     }
+
 
 
 
